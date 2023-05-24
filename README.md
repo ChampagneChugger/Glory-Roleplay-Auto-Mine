@@ -11,3 +11,5 @@ Python 3+, pyautogui, keyboard
 7. Start digging and the script should automatically click "e" when the red line hovers over the blue background.
 
 # Note: This has only been tested with 1920x1080 resolution.
+
+![gta](https://github.com/ChampagneChugger/Glory-Roleplay-Auto-Mine/assets/98952878/69140997-d2e2-40ee-9349-768bda8a5d81)
