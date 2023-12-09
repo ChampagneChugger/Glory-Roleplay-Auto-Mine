@@ -4,7 +4,7 @@ import ctypes
 import keyboard
 import time
 import os
-import pyautogui
+import pydirectinput
 
 # Get user screen resolution
 user32 = ctypes.windll.user32
@@ -67,25 +67,24 @@ clear = lambda: os.system("cls")
 
 
 def getValidPixels():
+    print("Started validating...")
     time.sleep(0.1)
-    pyautogui.mouseDown()
+    pydirectinput.mouseDown()
     time.sleep(0.1)
-    pyautogui.mouseUp()
+    pydirectinput.mouseUp()
     with mss.mss() as sct:
         img = sct.grab(capturearea)
         imgarray = np.array(img)
 
         for pixels in bluepositions:
-            currentPixelArray = imgarray[pixels[1]][pixels[0]]
-
             if (
-                currentPixelArray[0] == 194
-                and currentPixelArray[1] == 113
-                and currentPixelArray[2] == 25
+                imgarray[pixels[1]][pixels[0]][0] == 194
+                and imgarray[pixels[1]][pixels[0]][1] == 113
+                and imgarray[pixels[1]][pixels[0]][2] == 25
             ):
                 arrayWithBlues.append([pixels[1], pixels[0]])
 
-    print("Blues here: ", arrayWithBlues)
+    print("Validated...")
 
 
 # Wait 4 seconds before running script
@@ -114,27 +113,30 @@ def doSomething():
                 break
 
             for pixels in arrayWithBlues:
-                currentPixelArray = imgarray[pixels[0]][pixels[1]]
-                print(pixels)
-
                 if (
-                    currentPixelArray[0] == 0
-                    and currentPixelArray[1] == 0
-                    and currentPixelArray[2] == 255
+                    imgarray[pixels[0]][pixels[1]][0] == 0
+                    and imgarray[pixels[0]][pixels[1]][1] == 0
+                    and imgarray[pixels[0]][pixels[1]][2] == 255
                 ):
-                    pyautogui.keyDown("e")
-
-                    pyautogui.keyUp("e")
+                    pydirectinput.press("e")
                     clicked = True
-                    print("Clicked")
+                    print("Ended clicking function.")
 
     arrayWithBlues.clear()
 
 
 startTimer(5)
 
+emptyC = 0
+
 while not keyboard.is_pressed("q"):
-    if len(arrayWithBlues) > 0:
+    if len(arrayWithBlues) == 0:
+        emptyC += 1
+
+    if emptyC > 10:
+        pydirectinput.press("e")
+        emptyC = 0
+    elif len(arrayWithBlues) > 0:
         doSomething()
     else:
         getValidPixels()
